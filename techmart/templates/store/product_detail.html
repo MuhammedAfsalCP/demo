@@ -1,0 +1,54 @@
+{% extends "store/base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto bg-white p-6 shadow rounded flex flex-col md:flex-row gap-6 mt-8">
+
+    <!-- Product Image -->
+    <img src="{{ product.image.url }}" class="w-full md:w-1/2 object-cover rounded" alt="{{ product.title }}">
+
+    <!-- Product Details -->
+    <div class="md:w-1/2 flex flex-col">
+        <!-- Back Button -->
+        <a href="{% url 'shop' %}" class="mb-4 inline-block bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition">
+            ← Back to Shop
+        </a>
+
+        <h1 class="text-3xl font-bold mb-2 text-[var(--primary-color)]">{{ product.title }}</h1>
+        <p class="text-gray-600 mb-4">{{ product.category.name }}</p>
+        <p class="text-gray-700 mb-4">{{ product.description }}</p>
+        <p class="text-2xl font-semibold mb-4">₹{{ product.price }}</p>
+        <a href="{% url 'add_to_cart' product.id %}" class="bg-[var(--primary-color)] text-white px-4 py-2 rounded hover:bg-[var(--secondary-color)] transition text-center">
+            Add to Cart
+        </a>
+    </div>
+</div>
+
+<!-- Reviews Section -->
+<div class="max-w-4xl mx-auto bg-white p-6 shadow rounded mt-8">
+    <h2 class="text-2xl font-bold mb-4 text-[var(--primary-color)]">Reviews</h2>
+
+    <!-- Existing approved reviews -->
+    <div class="mb-6 space-y-4">
+        {% for review in product.productreview_set.all %}
+            {% if review.approved %}
+            <div class="border-b pb-2">
+                <p><strong>{{ review.user.username }}</strong> rated: {{ review.rating }}/5</p>
+                <p>{{ review.review }}</p>
+                <p class="text-gray-500 text-sm">{{ review.date_posted|date:"d M Y" }}</p>
+            </div>
+            {% endif %}
+        {% empty %}
+        <p class="text-gray-600">No reviews yet.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Add review form button -->
+    {% if user.is_authenticated %}
+    <a href="{% url 'add_review' product.id %}" class="bg-[var(--primary-color)] text-white px-4 py-2 rounded hover:bg-[var(--secondary-color)] transition">
+        Add a Review
+    </a>
+    {% else %}
+    <p class="text-gray-700">Please <a href="{% url 'login' %}" class="text-[var(--primary-color)] hover:underline">login</a> to add a review.</p>
+    {% endif %}
+</div>
+{% endblock %}

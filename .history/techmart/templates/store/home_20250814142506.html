@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TechMart - Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-color: {{ theme.primary_color|default:"#1D4ED8" }};
+            --secondary-color: {{ theme.secondary_color|default:"#FBBF24" }};
+            --text-color: {{ theme.text_color|default:"#000000" }};
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-[var(--text-color)]">
+
+<!-- BANNERS -->
+<section class="relative">
+    {% for banner in banners %}
+    <div class="h-96 bg-cover bg-center flex items-center justify-center mb-4" style="background-image: url('{{ banner.image.url }}')">
+        <div class="bg-black bg-opacity-50 p-6 text-center text-white rounded">
+            <h1 class="text-4xl font-bold">{{ banner.title }}</h1>
+            <p class="mt-2">{{ banner.subtitle }}</p>
+            {% if banner.button_text %}
+            <a href="{{ banner.button_url }}" class="mt-4 inline-block px-4 py-2 rounded bg-[var(--primary-color)] text-white hover:bg-[var(--secondary-color)] transition">{{ banner.button_text }}</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</section>
+
+<!-- OFFERS -->
+<section class="py-12 text-center">
+    <h2 class="text-3xl font-bold mb-6">Current Offers</h2>
+    <div class="flex flex-wrap justify-center gap-6">
+        {% for offer in offers %}
+        <div class="bg-white shadow p-6 rounded w-64 hover:shadow-lg transition">
+            <img src="{{ offer.image.url }}" alt="{{ offer.title }}" class="h-40 w-full object-cover rounded mb-2">
+            <h3 class="font-semibold text-lg">{{ offer.title }}</h3>
+            <p class="text-gray-600">{{ offer.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<form method="post" class="flex gap-2 justify-center mt-6">
+    {% csrf_token %}
+    <input type="email" name="email" placeholder="Enter your email" class="px-4 py-2 border rounded w-64">
+    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Subscribe</button>
+</form>
+
+</body>
+</html>

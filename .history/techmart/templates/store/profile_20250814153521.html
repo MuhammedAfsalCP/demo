@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile - TechMart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center py-12">
+
+<div class="bg-white p-8 rounded shadow w-96 text-center">
+    <h1 class="text-3xl font-bold mb-6">Profile</h1>
+    
+    <p class="mb-2"><strong>Username:</strong> {{ request.user.username }}</p>
+    <p class="mb-2"><strong>Email:</strong> {{ request.user.email }}</p>
+
+    # After login, redirect to home or profile
+LOGIN_REDIRECT_URL = 'profile'  # or 'home'
+LOGOUT_REDIRECT_URL = 'home'  
+</div>
+
+</body>
+</html>

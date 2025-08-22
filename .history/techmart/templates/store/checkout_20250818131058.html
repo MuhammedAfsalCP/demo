@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout - TechMart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+
+<h1 class="text-3xl font-bold mb-6">Checkout</h1>
+
+<div class="bg-white shadow p-6 rounded max-w-2xl mx-auto">
+    <h2 class="text-xl font-semibold mb-4">Your Order</h2>
+    <ul>
+        {% for product, qty in product_list %}
+        <li class="mb-2">
+            {{ product.title }} x {{ qty }} - ₹{{ product.price|floatformat:2 }}
+        </li>
+        {% endfor %}
+    </ul>
+
+    <p class="mt-4 font-bold">Total: ₹{{ total_amount|floatformat:2 }}</p>
+
+    <button id="rzp-button" class="mt-6 bg-blue-500 text-white px-4 py-2 rounded">
+        Pay Now
+    </button>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+var options = {
+    "key": "{{ razorpay_key_id }}",
+    "amount": "{{ total_amount|floatformat:0 }}00", // total in paise
+    "currency": "INR",
+    "name": "TechMart",
+    "description": "Electronics Purchase",
+    "order_id": "{{ order_id }}",
+    "handler": function (response){
+        window.location.href = "{% url 'payment_success' %}";
+    },
+    "theme": {"color": "#3399cc"}
+};
+var rzp1 = new Razorpay(options);
+document.getElementById('rzp-button').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+}
+</script>
+
+</body>
+</html>

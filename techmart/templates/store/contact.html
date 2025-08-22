@@ -1,0 +1,59 @@
+{% extends "store/base.html" %}
+
+{% block content %}
+<section class="bg-gray-50 py-12">
+  <div class="container mx-auto px-6 lg:px-20">
+    <!-- Heading -->
+    <h1 class="text-4xl font-bold text-center text-gray-800">Contact Us</h1>
+    <p class="text-center text-gray-600 mt-3 mb-10">
+      Have questions or need support? Get in touch with us.
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+      <!-- Contact Form -->
+      <div class="bg-white shadow-lg rounded-xl p-8">
+        <h2 class="text-2xl font-semibold mb-6 text-gray-700">Send us a Message</h2>
+        <form method="POST" action="">
+          {% csrf_token %}
+          <div class="mb-4">
+            <label for="name" class="block text-gray-600 font-medium">Name</label>
+            <input type="text" id="name" name="name" required
+              class="w-full mt-2 p-3 border rounded-lg focus:ring focus:ring-blue-200">
+          </div>
+          <div class="mb-4">
+            <label for="email" class="block text-gray-600 font-medium">Email</label>
+            <input type="email" id="email" name="email" required
+              class="w-full mt-2 p-3 border rounded-lg focus:ring focus:ring-blue-200">
+          </div>
+          <div class="mb-4">
+            <label for="message" class="block text-gray-600 font-medium">Message</label>
+            <textarea id="message" name="message" rows="5" required
+              class="w-full mt-2 p-3 border rounded-lg focus:ring focus:ring-blue-200"></textarea>
+          </div>
+          <button type="submit"
+            class="w-full bg-blue-600 text-white font-medium py-3 rounded-lg hover:bg-blue-700 transition">
+            Send Message
+          </button>
+        </form>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="flex flex-col justify-center">
+        <h2 class="text-2xl font-semibold mb-6 text-gray-700">Our Contact Details</h2>
+        <p class="text-gray-600 mb-4">
+          <strong>Address:</strong> Tech Computers, MG Road, Pune, India
+        </p>
+        <p class="text-gray-600 mb-4">
+          <strong>Email:</strong> support@techcomputers.com
+        </p>
+        <p class="text-gray-600 mb-4">
+          <strong>Phone:</strong> +91 9876543210
+        </p>
+        <p class="text-gray-600 mb-4">
+          We usually reply within 24 hours. For faster support, please call us directly.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ site_logo.alt_text|default:"TechMart" }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-yHma4GfZ4I+fYqH5+J0uD7kDd3Ip8R6HzUyxj57tR3JXYeNnrx+l3k1lymj1fNN6V2i3DBO1i8eJrjB45nX1hA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        :root {
+            --primary-color: {{ site_theme.primary_color|default:"#1D4ED8" }};
+            --secondary-color: {{ site_theme.secondary_color|default:"#FBBF24" }};
+            --text-color: {{ site_theme.text_color|default:"#000000" }};
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-[var(--text-color)]">
+
+    <!-- NAVBAR -->
+    <nav class="bg-white shadow-md relative z-50">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <!-- Logo -->
+            <div class="flex items-center gap-2">
+                {% if site_logo %}
+                    <a href="{% url 'home' %}">
+                        <img src="{{ site_logo.logo.url }}" alt="{{ site_logo.alt_text }}" class="h-10">
+                    </a>
+                {% else %}
+                    <a href="{% url 'home' %}" class="font-bold text-2xl text-[var(--primary-color)]">TechMart</a>
+                {% endif %}
+            </div>
+
+            <!-- Hamburger Button (Mobile) -->
+            <button id="menu-btn" class="md:hidden text-2xl text-black p-2 focus:outline-none z-50 transition-transform duration-300">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Desktop Navigation Links -->
+            <ul class="hidden md:flex gap-6 items-center">
+                {% for link in nav_links %}
+                    <li><a href="{{ link.url }}" class="hover:text-[var(--primary-color)] transition font-medium">{{ link.title }}</a></li>
+                {% endfor %}
+                <li><a href="{% url 'about' %}" class="hover:text-[var(--primary-color)] transition font-medium">About</a></li>
+                <li><a href="{% url 'contact' %}" class="hover:text-[var(--primary-color)] transition font-medium">Contact</a></li>
+
+                {% if user.is_authenticated %}
+                    <li>
+                        <a href="{% url 'cart' %}" class="hover:text-[var(--primary-color)] transition font-medium">
+                            Cart
+                            {% if cart_items_count %}
+                                <span class="ml-1 bg-[var(--secondary-color)] text-white text-xs px-2 py-1 rounded-full">{{ cart_items_count }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                    <li><a href="{% url 'profile' %}" class="hover:text-[var(--primary-color)] transition font-medium">Profile</a></li>
+                    <li>
+                        <form method="POST" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="hover:text-[var(--primary-color)] transition font-medium">Logout</button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li><a href="{% url 'signup' %}" class="hover:text-[var(--primary-color)] transition font-medium">Sign Up</a></li>
+                    <li><a href="{% url 'login' %}" class="hover:text-[var(--primary-color)] transition font-medium">Login</a></li>
+                    <li><a href="{% url 'login' %}?next={% url 'cart' %}" class="hover:text-[var(--primary-color)] transition font-medium">Cart</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- Mobile Menu -->
+        <!-- Mobile Menu -->
+<div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-white shadow-md md:hidden z-40">
+    <ul class="flex flex-col p-4 gap-4 text-black">
+        {% for link in nav_links %}
+            <li>
+                <a href="{{ link.url }}" class="block text-black hover:text-[var(--primary-color)] transition font-medium">{{ link.title }}</a>
+            </li>
+        {% endfor %}
+        <li><a href="{% url 'about' %}" class="block text-black hover:text-[var(--primary-color)] transition font-medium">About</a></li>
+        <li><a href="{% url 'contact' %}" class="block text-black hover:text-[var(--primary-color)] transition font-medium">Contact</a></li>
+
+        {% if user.is_authenticated %}
+            <li><a href="{% url 'profile' %}" class="block text-black hover:text-[var(--primary-color)] transition font-medium">Profile</a></li>
+            <li>
+                <form method="POST" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="w-full text-left block text-black hover:text-[var(--primary-color)] transition font-medium">Logout</button>
+                </form>
+            </li>
+        {% else %}
+            <li><a href="{% url 'signup' %}" class="block text-black hover:text-[var(--primary-color)] transition font-medium">Sign Up</a></li>
+            <li><a href="{% url 'login' %}" class="block text-black hover:text-[var(--primary-color)] transition font-medium">Login</a></li>
+            <li><a href="{% url 'login' %}?next={% url 'cart' %}" class="block text-black hover:text-[var(--primary-color)] transition font-medium">Cart</a></li>
+        {% endif %}
+    </ul>
+</div>
+
+        <!-- Toggle Script with Animated Cross -->
+        <script>
+            const btn = document.getElementById('menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            const icon = btn.querySelector('i');
+
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+
+                // Toggle Hamburger / Cross
+                if(icon.classList.contains('fa-bars')){
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+        </script>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="container mx-auto mt-6">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-100 p-6 mt-12 text-center">
+        <div class="flex justify-center gap-4 mb-4 flex-wrap">
+            {% for link in footer_links %}
+                <a href="{{ link.url }}" class="hover:text-[var(--primary-color)] transition font-medium">{{ link.name }}</a>
+            {% endfor %}
+            <a href="{% url 'about' %}" class="hover:text-[var(--primary-color)] transition font-medium">About</a>
+            <a href="{% url 'contact' %}" class="hover:text-[var(--primary-color)] transition font-medium">Contact</a>
+        </div>
+
+        <!-- Social Icons -->
+        <div class="flex justify-center gap-4 mb-4 text-gray-600 text-xl">
+            {% for social in social_links %}
+                <a href="{{ social.url }}" target="_blank" class="hover:text-[var(--primary-color)] transition">
+                    {% if social.name|lower == "facebook" %}<i class="fab fa-facebook-f"></i>
+                    {% elif social.name|lower == "twitter" %}<i class="fab fa-twitter"></i>
+                    {% elif social.name|lower == "instagram" %}<i class="fab fa-instagram"></i>
+                    {% elif social.name|lower == "linkedin" %}<i class="fab fa-linkedin-in"></i>
+                    {% else %}{{ social.name }}{% endif %}
+                </a>
+            {% endfor %}
+        </div>
+
+        <p class="text-gray-600">&copy; {{ site_logo.alt_text|default:"TechMart" }} {{ now|date:"Y" }}</p>
+    </footer>
+</body>
+</html>

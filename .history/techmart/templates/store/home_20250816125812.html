@@ -1,0 +1,133 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}TechMart - Home{% endblock %}
+
+{% block content %}
+
+<!-- BANNERS -->
+<section class="relative">
+    {% for banner in banners %}
+    <div class="relative h-96 mb-4 overflow-hidden rounded-lg">
+
+        <!-- Video or Image Background -->
+        {% if banner.video %}
+            <video class="absolute top-0 left-0 w-full h-full object-cover" autoplay muted loop>
+                <source src="{{ banner.video.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        {% elif banner.image %}
+            <div class="absolute top-0 left-0 w-full h-full bg-cover bg-center" style="background-image: url('{{ banner.image.url }}')"></div>
+        {% else %}
+            <div class="absolute top-0 left-0 w-full h-full bg-gray-400"></div>
+        {% endif %}
+
+        <!-- Overlay -->
+        <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-center text-white p-6">
+            <h1 class="text-4xl font-bold">{{ banner.title }}</h1>
+            <p class="mt-2">{{ banner.subtitle }}</p>
+            {% if banner.button_text %}
+                <a href="{{ banner.button_url }}" class="mt-4 inline-block px-6 py-2 rounded bg-[var(--primary-color)] text-white hover:bg-[var(--secondary-color)] transition">
+                    {{ banner.button_text }}
+                </a>
+            {% endif %}
+        </div>
+
+    </div>
+    {% endfor %}
+</section> 
+
+
+
+<!-- OFFERS -->
+
+<!-- OFFERS -->
+<section class="py-12">
+    <h2 class="text-3xl font-bold text-center mb-6">Current Offers</h2>
+    <div class="flex flex-wrap justify-center gap-6">
+        {% for offer in offers %}
+        <div class="bg-white shadow p-4 rounded w-64 hover:shadow-lg transition">
+
+            {% if offer.product.image %}
+                <img src="{{ offer.product.image.url }}" class="h-40 w-full object-cover rounded mb-2" alt="{{ offer.product.title }}">
+            {% else %}
+                <img src="{% static 'images/placeholder.png' %}" class="h-40 w-full object-cover rounded mb-2" alt="No Image">
+            {% endif %}
+
+            <h3 class="font-semibold text-lg">{{ offer.product.title }}</h3>
+            <p class="text-gray-600">₹{{ offer.product.price }}</p>
+            <p class="text-green-600 font-medium">{{ offer.discount_text }}</p>
+
+            <!-- Buttons -->
+            <div class="mt-3 flex justify-between">
+                <a href="{% url 'product_detail' offer.product.id %}" 
+                   class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
+                   View
+                </a>
+
+                <a href="{% url 'add_to_cart' offer.product.id %}" 
+                   class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-sm">
+                   Buy Now
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-gray-500">No current offers available.</p>
+        {% endfor %}
+    </div>
+</section>
+
+
+<!-- FEATURED PRODUCTS -->
+<section class="py-12">
+    <h2 class="text-3xl font-bold text-center mb-6">Featured Products</h2>
+    <div class="flex flex-wrap justify-center gap-6">
+        {% for fp in featured_products %}
+        <div class="bg-white shadow p-4 rounded w-64 hover:shadow-lg transition">
+            <img src="{{ fp.product.image.url }}" class="h-40 w-full object-cover rounded mb-2" alt="{{ fp.product.title }}">
+            <h3 class="font-semibold text-lg">{{ fp.product.title }}</h3>
+            <p class="text-gray-600">₹{{ fp.product.price }}</p>
+            <a href="{% url 'product_detail' fp.product.id %}" class="inline-block mt-2 text-blue-500 hover:underline">View</a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- BEST SELLERS -->
+<section class="py-12 bg-gray-50">
+    <h2 class="text-3xl font-bold text-center mb-6">Best Sellers</h2>
+    <div class="flex flex-wrap justify-center gap-6">
+        {% for bs in best_sellers %}
+        <div class="bg-white shadow p-4 rounded w-64 hover:shadow-lg transition">
+            <img src="{{ bs.product.image.url }}" class="h-40 w-full object-cover rounded mb-2" alt="{{ bs.product.title }}">
+            <h3 class="font-semibold text-lg">{{ bs.product.title }}</h3>
+            <p class="text-gray-600">₹{{ bs.product.price }}</p>
+            <a href="{% url 'product_detail' bs.product.id %}" class="inline-block mt-2 text-blue-500 hover:underline">View</a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- NEW ARRIVALS -->
+<section class="py-12 bg-white">
+    <h2 class="text-3xl font-bold text-center mb-6">New Arrivals</h2>
+    <div class="flex flex-wrap justify-center gap-6">
+        {% for na in new_arrivals %}
+        <div class="bg-gray-50 shadow p-4 rounded w-64 hover:shadow-lg transition">
+            <img src="{{ na.product.image.url }}" class="h-40 w-full object-cover rounded mb-2" alt="{{ na.product.title }}">
+            <h3 class="font-semibold text-lg">{{ na.product.title }}</h3>
+            <p class="text-gray-600">₹{{ na.product.price }}</p>
+            <a href="{% url 'product_detail' na.product.id %}" class="inline-block mt-2 text-blue-500 hover:underline">View</a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- NEWSLETTER SUBSCRIPTION -->
+<form method="post" class="flex gap-2 justify-center mt-6">
+    {% csrf_token %}
+    <input type="email" name="email" placeholder="Enter your email" class="px-4 py-2 border rounded w-64">
+    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Subscribe</button>
+</form>
+
+{% endblock %}

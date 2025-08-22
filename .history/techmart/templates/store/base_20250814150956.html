@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ site_settings.site_logo.alt_text|default:"TechMart" }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-color: {{ site_theme.primary_color|default:"#1D4ED8" }};
+            --secondary-color: {{ site_theme.secondary_color|default:"#FBBF24" }};
+            --text-color: {{ site_theme.text_color|default:"#000000" }};
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-[var(--text-color)]">
+    <!-- NAVBAR -->
+    <nav class="bg-white shadow p-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            {% if site_logo %}
+                <img src="{{ site_logo.logo.url }}" alt="{{ site_logo.alt_text }}" class="h-10">
+            {% else %}
+                <span class="font-bold text-xl">TechMart</span>
+            {% endif %}
+        </div>
+        <ul class="flex gap-4">
+            {% for link in nav_links %}
+            <li><a href="{{ link.url }}" class="hover:text-[var(--primary-color)]">{{ link.title }}</a></li>
+            {% endfor %}
+        </ul>
+        <div class="flex gap-2">
+            {% for social in social_links %}
+            <a href="{{ social.url }}" target="_blank">{{ social.name }}</a>
+            {% endfor %}
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    {% block content %}{% endblock %}
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-200 p-6 mt-12 text-center">
+        <div class="flex justify-center gap-4 mb-4">
+            {% for link in footer_links %}
+            <a href="{{ link.url }}" class="hover:text-[var(--primary-color)]">{{ link.name }}</a>
+            {% endfor %}
+        </div>
+        <p>&copy; {{ site_logo.alt_text|default:"TechMart" }} {{ now|date:"Y" }}</p>
+    </footer>
+</body>
+</html>

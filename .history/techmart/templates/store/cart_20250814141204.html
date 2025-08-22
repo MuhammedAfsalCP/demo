@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cart - TechMart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+
+<h1 class="text-3xl font-bold mb-6">Your Cart</h1>
+
+{% if cart_items %}
+<table class="w-full bg-white shadow rounded">
+    <thead>
+        <tr class="bg-gray-200">
+            <th class="p-2">Product</th>
+            <th class="p-2">Quantity</th>
+            <th class="p-2">Subtotal</th>
+            <th class="p-2">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in cart_items %}
+        <tr class="border-b">
+            <td class="p-2">{{ item.product.title }}</td>
+            <td class="p-2">{{ item.quantity }}</td>
+            <td class="p-2">₹{{ item.subtotal }}</td>
+            <td class="p-2">
+                <a href="{% url 'remove_from_cart' item.product.id %}" class="text-red-500">Remove</a>
+            </td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="2" class="text-right font-bold p-2">Total:</td>
+            <td colspan="2" class="p-2 font-bold">₹{{ total }}</td>
+        </tr>
+    </tbody>
+</table>
+<a href="#" class="mt-4 inline-block bg-green-500 text-white px-4 py-2 rounded">Proceed to Checkout</a>
+{% else %}
+<p>Your cart is empty.</p>
+{% endif %}
+
+</body>
+</html>

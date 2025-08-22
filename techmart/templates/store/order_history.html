@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order History - TechMart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+
+<h1 class="text-3xl font-bold mb-6 text-center">Your Orders</h1>
+
+<div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
+    {% if orders %}
+        {% for order in orders %}
+        <div class="mb-6 border-b pb-4">
+            <h2 class="font-semibold text-lg mb-2">Order #{{ order.id }} | {{ order.date_ordered|date:"d M Y H:i" }} | Status: {{ order.payment_status }}</h2>
+            <table class="w-full mb-2">
+                <thead>
+                    <tr class="text-left">
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.orderitem_set.all %}
+                    <tr class="border-b">
+                        <td>{{ item.product.title }}</td>
+                        <td>₹{{ item.price }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>₹{{ item.price|mul:item.quantity }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p class="text-right font-bold mt-2">Order Total: ₹{{ order.total_amount }}</p>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-center text-gray-500">You have no orders yet.</p>
+    {% endif %}
+</div>
+
+</body>
+</html>

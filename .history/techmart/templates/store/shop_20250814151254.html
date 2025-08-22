@@ -1,0 +1,77 @@
+{% extends "store/base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+
+    <h1 class="text-4xl font-bold mb-8 text-center text-[var(--primary-color)]">Shop</h1>
+
+    <!-- Search Bar -->
+    <form action="{% url 'shop_search' %}" method="get" class="mb-8 flex flex-col sm:flex-row justify-center gap-4">
+        <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search products..." 
+               class="flex-1 px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]">
+        <button type="submit" class="px-6 py-3 bg-[var(--primary-color)] text-white rounded-md hover:bg-[var(--secondary-color)] transition font-medium">
+            Search
+        </button>
+    </form>
+
+    <!-- Categories Filter -->
+    <div class="mb-8 flex flex-wrap justify-center gap-3">
+        <a href="{% url 'shop' %}" class="px-4 py-2 rounded-md {% if not selected_category %}bg-[var(--primary-color)] text-white{% else %}bg-gray-200{% endif %} hover:bg-[var(--primary-color)] hover:text-white transition">
+            All
+        </a>
+        {% for category in categories %}
+        <a href="?category={{ category.id }}" class="px-4 py-2 rounded-md {% if selected_category == category.id %}bg-[var(--primary-color)] text-white{% else %}bg-gray-200{% endif %} hover:bg-[var(--primary-color)] hover:text-white transition">
+            {{ category.name }}
+        </a>
+        {% endfor %}
+    </div>
+
+    <!-- Products Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for product in products %}
+        <div class="bg-white shadow rounded-lg p-4 hover:shadow-2xl transition flex flex-col">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" class="h-48 w-full object-cover rounded-md mb-4" alt="{{ product.title }}">
+            {% else %}
+            <div class="h-48 w-full bg-gray-200 flex items-center justify-center rounded-md mb-4 text-gray-500">
+                No Image
+            </div>
+            {% endif %}
+            <h3 class="font-semibold text-lg text-gray-800">{{ product.title }}</h3>
+            <p class="text-gray-600 font-medium mt-1">₹{{ product.price }}</p>
+            <p class="text-gray-500 text-sm mt-1">{{ product.category.name }}</p>
+            <div class="mt-auto flex gap-2 pt-4">
+                <a href="{% url 'product_detail' product.id %}" class="flex-1 text-center px-3 py-2 border border-gray-300 rounded-md hover:bg-[var(--primary-color)] hover:text-white transition">
+                    View
+                </a>
+                <a href="{% url 'add_to_cart' product.id %}" class="flex-1 text-center px-3 py-2 bg-[var(--primary-color)] text-white rounded-md hover:bg-[var(--secondary-color)] transition">
+                    Add to Cart
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj %}
+    <div class="mt-8 flex justify-center gap-2 flex-wrap">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}" class="px-3 py-1 bg-gray-200 rounded-md hover:bg-gray-300 transition">Previous</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <span class="px-3 py-1 bg-[var(--primary-color)] text-white rounded-md">{{ num }}</span>
+            {% else %}
+            <a href="?page={{ num }}{% if selected_category %}&category={{ selected_category }}{% endif %}" class="px-3 py-1 bg-gray-200 rounded-md hover:bg-gray-300 transition">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}" class="px-3 py-1 bg-gray-200 rounded-md hover:bg-gray-300 transition">Next</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

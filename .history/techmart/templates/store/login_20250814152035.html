@@ -1,0 +1,39 @@
+{% extends "store/base.html" %}
+
+{% block content %}
+<div class="flex justify-center items-center min-h-[80vh]">
+    <div class="bg-white shadow-2xl rounded-lg w-full max-w-md p-8 relative overflow-hidden">
+        
+        <!-- Decorative gradient circles -->
+        <div class="absolute -top-16 -left-16 w-40 h-40 bg-[var(--primary-color)] rounded-full opacity-30"></div>
+        <div class="absolute -bottom-16 -right-16 w-40 h-40 bg-[var(--secondary-color)] rounded-full opacity-30"></div>
+
+        <h1 class="text-3xl font-bold mb-6 text-center text-[var(--primary-color)]">Login to TechMart</h1>
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="flex flex-col">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                        <span class="text-red-500 text-sm mt-1">{{ field.errors }}</span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="w-full bg-[var(--primary-color)] text-white px-4 py-2 rounded-md hover:bg-[var(--secondary-color)] transition font-medium">
+                Login
+            </button>
+        </form>
+
+        <p class="mt-6 text-center text-gray-600">
+            Don't have an account? 
+            <a href="{% url 'signup' %}" class="text-[var(--primary-color)] hover:underline">Sign up</a>
+        </p>
+
+        <p class="mt-2 text-center text-gray-400 text-sm">
+            Forgot password? <a href="{% url 'password_reset' %}" class="text-[var(--primary-color)] hover:underline">Reset here</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

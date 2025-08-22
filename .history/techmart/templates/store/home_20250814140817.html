@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TechMart - Electronics Store</title>
+    <!-- Tailwind CDN (optional, can use Bootstrap) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+<!-- HERO SLIDER -->
+<section class="relative">
+    {% for slide in hero_slides %}
+    <div class="h-96 bg-cover bg-center flex items-center justify-center" style="background-image: url('{{ slide.background_image.url }}')">
+        <div class="bg-black bg-opacity-50 p-6 text-center text-white">
+            <h1 class="text-4xl font-bold">{{ slide.headline }}</h1>
+            <p class="mt-2">{{ slide.sub_text }}</p>
+            {% if slide.button_text %}
+            <a href="{{ slide.button_url }}" class="mt-4 inline-block bg-blue-500 px-4 py-2 rounded">{{ slide.button_text }}</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</section>
+
+<!-- CATEGORIES -->
+<section class="py-12 text-center">
+    <h2 class="text-3xl font-bold mb-6">Categories</h2>
+    <div class="flex flex-wrap justify-center gap-6">
+        {% for category in categories %}
+        <div class="bg-white shadow p-6 rounded w-64">
+            <h3 class="font-semibold text-xl">{{ category.name }}</h3>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- FEATURED PRODUCTS -->
+<section class="py-12 text-center">
+    <h2 class="text-3xl font-bold mb-6">Featured Products</h2>
+    <div class="flex flex-wrap justify-center gap-6">
+        {% for product in featured_products %}
+        <div class="bg-white shadow p-4 rounded w-64">
+            <img src="{{ product.image.url }}" alt="{{ product.title }}" class="h-40 w-full object-cover rounded mb-2">
+            <h3 class="font-semibold text-lg">{{ product.title }}</h3>
+            <p class="text-gray-600">₹{{ product.price }}</p>
+            <p class="text-gray-500 text-sm">{{ product.category.name }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- ABOUT SECTION -->
+{% if about %}
+<section class="py-12 bg-white flex flex-wrap items-center justify-center gap-6">
+    <div class="w-full md:w-1/2">
+        <h2 class="text-3xl font-bold mb-4">{{ about.title }}</h2>
+        <p class="text-gray-700">{{ about.description }}</p>
+    </div>
+    {% if about.image %}
+    <div class="w-full md:w-1/2">
+        <img src="{{ about.image.url }}" alt="About" class="rounded shadow">
+    </div>
+    {% endif %}
+</section>
+{% endif %}
+
+</body>
+</html>

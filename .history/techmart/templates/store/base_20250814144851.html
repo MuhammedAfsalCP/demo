@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TechMart{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            {% if site_theme %}
+            --primary-color: {{ site_theme.primary_color }};
+            --secondary-color: {{ site_theme.secondary_color }};
+            --text-color: {{ site_theme.text_color }};
+            {% else %}
+            --primary-color: #1D4ED8; /* default blue */
+            --secondary-color: #F3F4F6; /* default gray */
+            --text-color: #111827;
+            {% endif %}
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-[var(--text-color)]">
+
+<!-- Navbar -->
+<nav class="bg-[var(--primary-color)] text-white p-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="{% url 'home' %}" class="text-2xl font-bold">TechMart</a>
+        <ul class="flex gap-4">
+            <li><a href="{% url 'shop' %}" class="hover:text-gray-200">Shop</a></li>
+            <li><a href="{% url 'about' %}" class="hover:text-gray-200">About</a></li>
+            <li><a href="{% url 'contact' %}" class="hover:text-gray-200">Contact</a></li>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'profile' %}" class="hover:text-gray-200">Profile</a></li>
+            <li><a href="{% url 'logout' %}" class="hover:text-gray-200">Logout</a></li>
+            {% else %}
+            <li><a href="{% url 'login' %}" class="hover:text-gray-200">Login</a></li>
+            <li><a href="{% url 'register' %}" class="hover:text-gray-200">Signup</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+{% if hero_sections %}
+<section class="relative">
+    {% for hero in hero_sections %}
+    <div class="h-[400px] bg-cover bg-center flex items-center justify-center text-center text-white"
+         style="background-image: url('{{ hero.background_image.url }}');">
+        <div class="bg-black bg-opacity-50 p-6 rounded">
+            <h1 class="text-4xl font-bold mb-2">{{ hero.headline }}</h1>
+            <p class="mb-4">{{ hero.sub_text }}</p>
+            {% if hero.button_text and hero.button_url %}
+            <a href="{{ hero.button_url }}" class="bg-[var(--secondary-color)] text-[var(--primary-color)] px-4 py-2 rounded font-semibold">{{ hero.button_text }}</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</section>
+{% endif %}
+
+<!-- Main content -->
+<main class="container mx-auto my-8 px-4">
+    {% block content %}
+    {% endblock %}
+</main>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-white py-6">
+    <div class="container mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+        <p>&copy; {{ current_year }} TechMart. All rights reserved.</p>
+        <div class="flex gap-4">
+            {% for link in footer_links %}
+            <a href="{{ link.url }}" class="hover:text-gray-400">{{ link.title }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

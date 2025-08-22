@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ site_title|default:"TechMart" }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-color: {{ theme.primary_color|default:"#1D4ED8" }};
+            --secondary-color: {{ theme.secondary_color|default:"#FBBF24" }};
+            --text-color: {{ theme.text_color|default:"#000000" }};
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-[var(--text-color)]">
+
+<!-- NAVBAR -->
+<header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+            <!-- Logo -->
+            <div class="flex-shrink-0">
+                {% if site_logo %}
+                    <a href="{% url 'home' %}">
+                        <img src="{{ site_logo.url }}" alt="Logo" class="h-12 w-auto">
+                    </a>
+                {% else %}
+                    <a href="{% url 'home' %}" class="text-2xl font-bold text-[var(--primary-color)]">TechMart</a>
+                {% endif %}
+            </div>
+
+            <!-- Nav Links -->
+            <nav class="hidden md:flex space-x-6">
+                {% for link in nav_links %}
+                <a href="{{ link.url }}" class="text-gray-700 hover:text-[var(--primary-color)] font-medium transition">
+                    {{ link.title }}
+                </a>
+                {% endfor %}
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden flex items-center">
+                <button id="mobile-menu-button" class="text-gray-700 focus:outline-none">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            {% for link in nav_links %}
+            <a href="{{ link.url }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-[var(--primary-color)] transition">
+                {{ link.title }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</header>
+
+<!-- MAIN CONTENT -->
+<main class="py-8">
+    {% block content %}
+    {% endblock %}
+</main>
+
+<!-- FOOTER -->
+<footer class="bg-gray-800 text-white mt-12">
+    <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center">
+        <p>&copy; {{ current_year }} {{ site_title|default:"TechMart" }}. All rights reserved.</p>
+        <div class="flex gap-4 mt-2 md:mt-0">
+            {% for social in social_links %}
+            <a href="{{ social.url }}" target="_blank" class="hover:text-[var(--primary-color)] transition">{{ social.name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</footer>
+
+<script>
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+</script>
+</body>
+</html>

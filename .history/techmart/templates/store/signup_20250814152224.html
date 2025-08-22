@@ -1,0 +1,31 @@
+{% extends "store/base.html" %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full bg-white p-8 rounded-xl shadow-lg">
+        <h2 class="text-3xl font-extrabold text-center mb-6 text-[var(--primary-color)]">Create an Account</h2>
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ field.errors|striptags }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="w-full py-3 px-4 bg-[var(--primary-color)] text-white rounded-lg hover:bg-[var(--secondary-color)] transition font-semibold">
+                Signup
+            </button>
+        </form>
+
+        <p class="mt-6 text-center text-gray-500">
+            Already have an account? 
+            <a href="{% url 'login' %}" class="text-[var(--primary-color)] hover:underline">Login</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
