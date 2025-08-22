@@ -24,7 +24,7 @@ LOGOUT_REDIRECT_URL = 'home'
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = 'django-insecure-(vi51=twbzz+4mb5eo8+os!d!-%5n8dpxf_f_p*3ed6l@3opv#'
 DEBUG = True
-ALLOWED_HOSTS = ['31.97.233.107', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ["techcomputer.store", "www.techcomputer.store", "31.97.233.107", "127.0.0.1", "localhost"]
 
 # Application definition
 INSTALLED_APPS = [
